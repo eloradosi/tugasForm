@@ -1,29 +1,31 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { PopupComponent } from './popup.component';
-import { ApiService } from './api.service';
+import { Component, OnInit } from '@angular/core';
+import { NasabahService } from './service/nasabah-service';
+import { Nasabah } from './model/nasabah-model';
 
 @Component({
-  // ...
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
 })
-export class AppComponent {
-  formData: any = {}; // Sesuaikan dengan model data Anda
+export class AppComponent implements OnInit {
+  
+  title = 'study-case-app';
+  nasabah: Nasabah[] = [];
 
-  constructor(private dialog: MatDialog, private apiService: ApiService) {}
-
-  onSubmit() {
-    this.apiService.submitForm(this.formData).subscribe(
-      response => {
-        const dialogRef = this.dialog.open(PopupComponent);
-
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(Dialog closed: ${result});
-        });
-      },
-      error => {
-        console.error('Error submitting form:', error);
-        // Handle error jika diperlukan
-      }
-    );
+  constructor(private nasabahService: NasabahService){
   }
+
+  ngOnInit(): void {
+   this.getAllNasabah()
+  }
+
+  getAllNasabah(){
+    this.nasabahService.getAllNasabahData().subscribe((item)=>{
+      this.nasabah = item
+      console.log('success data', item)
+    })
+  }
+
+
 }
+
